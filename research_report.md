@@ -11,7 +11,7 @@ This is not presented as production-ready alpha. It is a research signal with a 
 Strategy:
 
 ```text
-Signal: ROC shock <= -0.10
+Signal: ΔSurprise <= -0.10
 Calendar filter: September only
 Entry: next Tuesday 08:00 CT day-session open proxy after USDA Crop Progress release
 Exit: 5 trading-session opens later
@@ -42,10 +42,10 @@ USDA Crop Progress reports are public, weekly, and widely watched. The hypothesi
 The signal is deliberately simple:
 
 ```text
-ROC shock = change in composite surprise from last week to this week
+ΔSurprise = change in composite surprise from last week to this week
 ```
 
-A negative ROC shock means the crop-condition surprise got worse quickly.
+A negative ΔSurprise means the crop-condition surprise got worse quickly.
 
 ## Data
 
@@ -93,7 +93,7 @@ weighted_composite = sum(state_score * production_weight) / available_weight
 
 The `available_weight` adjustment prevents missing state rows from being treated as zero.
 
-## Surprise And ROC Shock
+## Surprise And ΔSurprise
 
 For each crop week, the code builds a two-year seasonal expectation:
 
@@ -105,7 +105,7 @@ Then:
 
 ```text
 composite_surprise = weighted_composite - expected_composite_2y
-ROC shock = composite_surprise[t] - composite_surprise[t-1]
+ΔSurprise = composite_surprise[t] - composite_surprise[t-1]
 ```
 
 The ROC calculation is grouped by calendar year, so the first print of a new season is not compared with the previous year.
@@ -128,15 +128,15 @@ This is intended to avoid artificial roll jumps and avoid daily-close entry ambi
 
 The 2020 example is the cleanest visual: crop-condition ROC deteriorates sharply and futures rally afterward.
 
-![2020 ROC shock vs futures](assets/charts/roc_vs_futures_2020.png)
+![2020 ΔSurprise vs futures](assets/charts/roc_vs_futures_2020.png)
 
 2014 is useful as a modest/near-flat signal year.
 
-![2014 ROC shock vs futures](assets/charts/roc_vs_futures_2014.png)
+![2014 ΔSurprise vs futures](assets/charts/roc_vs_futures_2014.png)
 
 2023 is useful as a mixed recent year.
 
-![2023 ROC shock vs futures](assets/charts/roc_vs_futures_2023.png)
+![2023 ΔSurprise vs futures](assets/charts/roc_vs_futures_2023.png)
 
 Additional chart assets:
 
@@ -153,7 +153,7 @@ The signal is not simply long crop-season corn exposure.
 
 | Benchmark | Trades | Mean | Hit rate | t-stat | Profit factor |
 |---|---:|---:|---:|---:|---:|
-| ROC shock strategy | 23 | 1.42% | 82.6% | 2.78 | 5.03 |
+| ΔSurprise strategy | 23 | 1.42% | 82.6% | 2.78 | 5.03 |
 | All September session-open days, rolling 5d | 285 | 0.25% | 51.9% | 1.70 | 1.29 |
 | September monthly buy-and-hold | 14 | -0.52% | 71.4% | -0.40 | 0.74 |
 | Monthly rolling Jun-Oct long | 70 | -0.86% | 44.3% | -0.90 | 0.75 |
