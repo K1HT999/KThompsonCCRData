@@ -1,7 +1,7 @@
 # September Effect Deep Dive
 
 ## Core Result
-- Strategy: `ROC shock <= -0.10`, September only, Tuesday 08:00 CT open proxy, 5 trading-session hold
+- Strategy: `ΔSurprise <= -0.10`, September only, Tuesday 08:00 CT open proxy, 5 trading-session hold
 - Trades: `23`
 - Mean: `1.42%`
 - Median: `1.12%`
