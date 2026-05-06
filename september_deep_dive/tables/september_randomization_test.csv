@@ -1,0 +1,2 @@
+observed_mean,observed_hit_rate,observed_profit_factor,simulations,universe_n,draw_n,p_mean_ge_observed,p_hit_ge_observed,p_profit_factor_ge_observed,mean_sim_mean,p95_sim_mean,p99_sim_mean
+0.01416086429214755,0.8260869565217391,5.02635710271548,50000,61,23,0.00374,0.00276,0.0078,0.0032722809597819633,0.010083183382303164,0.012731095918964264
