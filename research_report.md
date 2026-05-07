@@ -33,7 +33,7 @@ Performance:
 | Exact binomial p-value | 0.0026 |
 | Compounded return across trades | 37.3% |
 
-Source table: [sep_roc_strategy_summary.csv](assets/tables/sep_roc_strategy_summary.csv)
+Source table: [sep_ΔSurprise_strategy_summary.csv](assets/tables/sep_ΔSurprise_strategy_summary.csv)
 
 ## Economic Intuition
 
@@ -108,7 +108,7 @@ composite_surprise = weighted_composite - expected_composite_2y
 ΔSurprise = composite_surprise[t] - composite_surprise[t-1]
 ```
 
-The ROC calculation is grouped by calendar year, so the first print of a new season is not compared with the previous year.
+The ΔSurprise calculation is grouped by calendar year, so the first print of a new season is not compared with the previous year.
 
 ## Futures Rolling And Execution
 
@@ -126,26 +126,26 @@ This is intended to avoid artificial roll jumps and avoid daily-close entry ambi
 
 ## Chart Examples
 
-The 2020 example is the cleanest visual: crop-condition ROC deteriorates sharply and futures rally afterward.
+The 2020 example is the cleanest visual: crop-condition ΔSurprise deteriorates sharply and futures rally afterward.
 
-![2020 ΔSurprise vs futures](assets/charts/roc_vs_futures_2020.png)
+![2020 ΔSurprise vs futures](assets/charts/ΔSurprise_vs_futures_2020.png)
 
 2014 is useful as a modest/near-flat signal year.
 
-![2014 ΔSurprise vs futures](assets/charts/roc_vs_futures_2014.png)
+![2014 ΔSurprise vs futures](assets/charts/ΔSurprise_vs_futures_2014.png)
 
 2023 is useful as a mixed recent year.
 
-![2023 ΔSurprise vs futures](assets/charts/roc_vs_futures_2023.png)
+![2023 ΔSurprise vs futures](assets/charts/ΔSurprise_vs_futures_2023.png)
 
 Additional chart assets:
 
 | Year | Chart |
 |---|---|
-| 2015 | [roc_vs_futures_2015.png](assets/charts/roc_vs_futures_2015.png) |
-| 2016 | [roc_vs_futures_2016.png](assets/charts/roc_vs_futures_2016.png) |
-| 2022 | [roc_vs_futures_2022.png](assets/charts/roc_vs_futures_2022.png) |
-| 2025 | [roc_vs_futures_2025.png](assets/charts/roc_vs_futures_2025.png) |
+| 2015 | [ΔSurprise_vs_futures_2015.png](assets/charts/ΔSurprise_vs_futures_2015.png) |
+| 2016 | [ΔSurprise_vs_futures_2016.png](assets/charts/ΔSurprise_vs_futures_2016.png) |
+| 2022 | [ΔSurprise_vs_futures_2022.png](assets/charts/ΔSurprise_vs_futures_2022.png) |
+| 2025 | [ΔSurprise_vs_futures_2025.png](assets/charts/ΔSurprise_vs_futures_2025.png) |
 
 ## Baseline Comparisons
 
@@ -166,7 +166,7 @@ September-only threshold behavior is orderly rather than concentrated in one iso
 
 Selected 5-day rows:
 
-| ROC threshold | Trades | Years | Mean 5d return | Hit rate | t-stat |
+| ΔSurprise threshold | Trades | Years | Mean 5d return | Hit rate | t-stat |
 |---|---:|---:|---:|---:|---:|
 | -0.30 | 4 | 3 | 3.20% | 100.0% | 5.08 |
 | -0.25 | 6 | 5 | 3.28% | 100.0% | 4.01 |
@@ -197,7 +197,7 @@ Interpretation: stricter thresholds produce fewer, larger signals; looser thresh
 | 2024 | 1 | 1.12% | 100.0% | 2024-09-01 |
 | 2025 | 3 | 0.54% | 66.7% | 2025-09-07, 2025-09-21, 2025-09-28 |
 
-Source table: [sep_roc_strategy_by_year.csv](assets/tables/sep_roc_strategy_by_year.csv)
+Source table: [sep_ΔSurprise_strategy_by_year.csv](assets/tables/sep_ΔSurprise_strategy_by_year.csv)
 
 ## Execution Cost Stress
 
