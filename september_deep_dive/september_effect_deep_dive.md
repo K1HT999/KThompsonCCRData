@@ -13,11 +13,11 @@
 ## Baseline Comparison
 | Sample | n | Mean | Median | Hit | t-stat | Profit factor |
 |---|---:|---:|---:|---:|---:|---:|
-| Sep ROC<=-0.10 signal weeks | 23 | 1.42% | 1.12% | 82.61% | 2.78 | 5.03 |
+| Sep ΔSurprise<=-0.10 signal weeks | 23 | 1.42% | 1.12% | 82.61% | 2.78 | 5.03 |
 | All September crop-report weeks | 61 | 0.33% | 0.39% | 59.02% | 1.01 | 1.40 |
 | September non-signal crop-report weeks | 38 | -0.33% | -0.09% | 44.74% | -0.86 | 0.70 |
 | All Jun-Oct crop-report weeks | 301 | -0.00% | -0.31% | 45.18% | -0.01 | 1.00 |
-| Jun-Oct ROC<=-0.10 signal weeks | 86 | 0.58% | 0.36% | 56.98% | 1.44 | 1.54 |
+| Jun-Oct ΔSurprise<=-0.10 signal weeks | 86 | 0.58% | 0.36% | 56.98% | 1.44 | 1.54 |
 | All September session-open days rolling 5d | 285 | 0.25% | 0.19% | 51.93% | 1.70 | 1.29 |
 | September monthly buy-and-hold | 14 | -0.52% | 1.08% | 71.43% | -0.40 | 0.74 |
 | Monthly rolling Jun-Oct long | 70 | -0.86% | -1.13% | 44.29% | -0.90 | 0.75 |
@@ -34,7 +34,7 @@ Randomly selected `23` September crop-report weeks from the `61` available Septe
 The average simulated mean was `0.33%`. The 95th percentile simulated mean was `1.01%`; the 99th percentile was `1.27%`.
 
 ## Month And Threshold Check
-At the selected `ROC <= -0.10` threshold, September is the standout month.
+At the selected `ΔSurprise <= -0.10` threshold, September is the standout month.
 
 | Month | Trades | Mean 5d | Hit | t-stat | Profit factor |
 |---|---:|---:|---:|---:|---:|
