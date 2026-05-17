@@ -47,8 +47,8 @@ Source table: [sep_ΔSurprise_strategy_summary.csv](assets/tables/sep_ΔSurprise
 
 Source table: [benchmark_summary.csv](assets/tables/benchmark_summary.csv)
 
-This investigation showed the viability of Crop Condition Reports in Corn futures trading intelligence. There are further applications to other crops and expanded datasets to continue testing. This strategy will begin to be tracked live as of August 1st, 2026. 
+This investigation showed the viability of Crop Condition Reports in Corn futures trading intelligence. There are further applications to other crops and expanded datasets to continue testing. I will continue researching this specific channel in further iterations. This strategy will begin to be tracked live as of August 1st, 2026. 
 
-Author: K. Thompson
-Research Platform: ThomPlatz Research
-Contact: thomplatzresearch@gmail.com
+**Author**: K. Thompson
+**Research Platform**: ThomPlatz Research
+**Contact**: thomplatzresearch@gmail.com
