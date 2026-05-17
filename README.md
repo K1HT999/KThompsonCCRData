@@ -1,10 +1,15 @@
 # Can USDA Crop-Condition Shocks Predict Short-Term Corn Futures Returns?
 
-This research note tests whether sudden deterioration in USDA corn crop-condition data has historically preceded short-term upside in front-month corn futures.
+This research investigates whether sudden deterioration in USDA corn crop-condition data has historically preceded short-term upside in front-month corn futures.
+
+Crop Condition Reports (CCRs) are official USDA reports released weekly from planting to harvest season. For corn, this generally lies between late April and November.
+Reports contain the percentage of each crop condition: very poor, poor, fair, good, and excellent.
+
+For this research, I formalized a simple weighted composite score that corresponds to the overall crop state in the designated region. This score was eventually translated into a value corresponding to the difference from the expected value composite value.
 
 The core finding is a September-specific event pattern: when a production-weighted crop-condition surprise deteriorated sharply, ZC corn futures tended to rise over the next five trading sessions.
 
-This is not presented as production-ready alpha. It is a research signal with a plausible economic mechanism, clean implementation checks, and meaningful limitations.
+I do not intend to publish this as a production-ready alpha. It is a research signal with a plausible economic mechanism, clean implementation checks, and meaningful limitations.
 
 ## Headline Result
 
@@ -78,13 +83,6 @@ Each state receives a weekly condition score:
 base_ratio = (Good + Excellent) / (Poor + Fair)
 ```
 
-From September onward, the code applies a harvest-period compression:
-
-```text
-harvest_modifier = exp(-(Poor / Good))
-composite_c = clip(base_ratio * harvest_modifier, 1, 10)
-```
-
 The six state scores are combined using production weights:
 
 ```text
@@ -122,7 +120,7 @@ The futures return series uses a volume-led, ratio-adjusted front-month chain:
 | Entry price | 08:00 CT 1-hour bar open, proxy for the 08:30 CT day-session open |
 | Exit price | Same open proxy, 5 trading sessions later |
 
-This is intended to avoid artificial roll jumps and avoid daily-close entry ambiguity.
+This is intended to avoid artificial roll jumps and avoid daily-close entry ambiguity, which is a very common failure point in many futures strategies.
 
 ## Chart Examples
 
@@ -168,7 +166,10 @@ Deep dive: [september_effect_deep_dive.md](september_deep_dive/september_effect_
 
 ## Threshold Sensitivity
 
-September-only threshold behavior is orderly rather than concentrated in one isolated cutoff.
+September-only threshold behavior shows excellent results. We would expect to see a direct correlation between the strength of the signal and the magnitude of returns.
+That is what we observe:
+As ΔSurprise decreases, mean return increases and t-stat increases, but trade count decreases.
+As ΔSurprise increases, trade count rises, but so does the number of losses.
 
 Selected 5-day rows:
 
@@ -182,8 +183,6 @@ Selected 5-day rows:
 | -0.05 | 26 | 13 | 1.50% | 80.8% | 3.19 |
 
 Source table: [sep_only_threshold_horizon_sweep.csv](assets/tables/sep_only_threshold_horizon_sweep.csv)
-
-Interpretation: stricter thresholds produce fewer, larger signals; looser thresholds add sample while gradually diluting quality. That shape is more encouraging than a single parameter spike.
 
 ## By-Year Breakdown
 
@@ -203,11 +202,13 @@ Interpretation: stricter thresholds produce fewer, larger signals; looser thresh
 | 2024 | 1 | 1.12% | 100.0% | 2024-09-01 |
 | 2025 | 3 | 0.54% | 66.7% | 2025-09-07, 2025-09-21, 2025-09-28 |
 
+This demonstrates that returns are not grouped strongly in a single year, but occur regularly over the entire trading period in a "relatively" even dispersion.
+
 Source table: [sep_ΔSurprise_strategy_by_year.csv](assets/tables/sep_ΔSurprise_strategy_by_year.csv)
 
 ## Execution Cost Stress
 
-The strategy was stressed with round-trip return haircuts.
+The strategy was stress-tested with round-trip cost modelling. The edge survived.
 
 | Cost assumption | Mean return | Hit rate | t-stat | Profit factor |
 |---|---:|---:|---:|---:|
@@ -244,7 +245,7 @@ Top-winner stress:
 | Drop top 3 winners | 0.82% | 80.0% | 1.84 | 3.03 |
 | Drop top 5 winners | 0.52% | 77.8% | 1.19 | 2.16 |
 
-The result weakens when large winners are removed, but it does not disappear immediately.
+The result weakens when large winners are removed, but it does not disappear immediately. This is also observed as a result of the small sample size. 
 
 ## Limitations
 
