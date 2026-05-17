@@ -271,6 +271,10 @@ The most useful extensions:
 
 ## Bottom Line
 
-This research found a historically strong September reaction pattern in corn futures after sudden crop-condition deterioration. The result survives implementation checks and simple cost stress, and it meaningfully outperforms same-market seasonal baselines.
+We found a historically strong September reaction pattern in corn futures after sudden crop-condition deterioration. The result survives implementation checks and simple cost stress, and it meaningfully outperforms same-market seasonal baselines.
 
-I would treat it as a promising commodity research signal, not a finished trading system.
+This investigation showed the viability of Crop Condition Reports in Corn futures trading intelligence. There are further applications to other crops and expanded datasets to continue testing. I will continue researching this specific channel in further iterations. This strategy will begin to be tracked live as of August 1st, 2026. 
+
+**Author**: K. Thompson
+**Research Platform**: ThomPlatz Research
+**Contact**: thomplatzresearch@gmail.com
