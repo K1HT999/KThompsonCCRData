@@ -5,11 +5,9 @@ This research investigates whether sudden deterioration in USDA corn crop-condit
 Crop Condition Reports (CCRs) are official USDA reports released weekly from planting to harvest season. For corn, this generally lies between late April and November.
 Reports contain the percentage of each crop condition: very poor, poor, fair, good, and excellent.
 
-For this research, I formalized a simple weighted composite score that corresponds to the overall crop state in the designated region. This score was eventually translated into a value corresponding to the difference from the expected value composite value.
-
 The core finding is a September-specific event pattern: when a production-weighted crop-condition surprise deteriorated sharply, ZC corn futures tended to rise over the next five trading sessions.
 
-I do not intend to publish this as a production-ready alpha. It is a research signal with a plausible economic mechanism, clean implementation checks, and meaningful limitations.
+This is not production-ready alpha. It is a research signal with a plausible economic mechanism, clean implementation checks, and meaningful limitations.
 
 ## Headline Result
 
@@ -40,115 +38,6 @@ Performance:
 
 Source table: [sep_ΔSurprise_strategy_summary.csv](assets/tables/sep_ΔSurprise_strategy_summary.csv)
 
-## Economic Intuition
-
-USDA Crop Progress reports are public, weekly, and widely watched. The hypothesis is not that crop-condition data is unknown. The hypothesis is that a sharp late-season deterioration can force a short-term repricing of yield risk, especially in September when market attention shifts from growing-season potential to harvestable supply.
-
-The signal is deliberately simple:
-
-```text
-ΔSurprise = change in composite surprise from last week to this week
-```
-
-A negative ΔSurprise means the crop-condition surprise got worse quickly.
-
-## Data
-
-Inputs:
-
-| Dataset | Use |
-|---|---|
-| USDA NASS weekly Crop Progress / Condition | State-level corn condition scores |
-| USDA NASS state production shares | Production-weighted composite |
-| Databento ZC 1-hour OHLCV | Adjusted front-month futures returns |
-
-The six modeled states are Iowa, Illinois, Nebraska, Minnesota, Indiana, and South Dakota.
-
-State weights used in code:
-
-| State | Weight |
-|---|---:|
-| Iowa | 27.09% |
-| Illinois | 23.66% |
-| Nebraska | 17.28% |
-| Minnesota | 14.40% |
-| Indiana | 11.10% |
-| South Dakota | 6.47% |
-
-## Composite Construction
-
-Each state receives a weekly condition score:
-
-```text
-base_ratio = (Good + Excellent) / (Poor + Fair)
-```
-
-The six state scores are combined using production weights:
-
-```text
-weighted_composite = sum(state_score * production_weight) / available_weight
-```
-
-The `available_weight` adjustment prevents missing state rows from being treated as zero.
-
-## Surprise And ΔSurprise
-
-For each crop week, the code builds a two-year seasonal expectation:
-
-```text
-expected_composite_2y = average of the same crop week in year-1 and year-2
-```
-
-Then:
-
-```text
-composite_surprise = weighted_composite - expected_composite_2y
-ΔSurprise = composite_surprise[t] - composite_surprise[t-1]
-```
-
-The ΔSurprise calculation is grouped by calendar year, so the first print of a new season is not compared with the previous year.
-
-## Futures Rolling And Execution
-
-The futures return series uses a volume-led, ratio-adjusted front-month chain:
-
-| Step | Treatment |
-|---|---|
-| Contract selection | Prior-session volume leadership |
-| Roll direction | Forward-only by expiry proxy |
-| Roll adjustment | Ratio-adjust OHLC across contract switches |
-| Entry price | 08:00 CT 1-hour bar open, proxy for the 08:30 CT day-session open |
-| Exit price | Same open proxy, 5 trading sessions later |
-
-This is intended to avoid artificial roll jumps and avoid daily-close entry ambiguity, which is a very common failure point in many futures strategies.
-
-## Chart Examples
-
-The 2020 example is the cleanest visual: crop-condition ΔSurprise deteriorates sharply and futures rally afterward.
-
-![2020 ΔSurprise vs futures](assets/charts/ΔSurprise_vs_futures_2020.png)
-
-2014 is useful as a modest/near-flat signal year.
-
-![2014 ΔSurprise vs futures](assets/charts/ΔSurprise_vs_futures_2014.png)
-
-2023 is useful as a mixed recent year.
-
-![2023 ΔSurprise vs futures](assets/charts/ΔSurprise_vs_futures_2023.png)
-
-Additional chart assets:
-
-| Year | Chart |
-|---|---|
-| 2015 | [ΔSurprise_vs_futures_2015.png](assets/charts/ΔSurprise_vs_futures_2015.png) |
-| 2016 | [ΔSurprise_vs_futures_2016.png](assets/charts/ΔSurprise_vs_futures_2016.png) |
-| 2022 | [ΔSurprise_vs_futures_2022.png](assets/charts/ΔSurprise_vs_futures_2022.png) |
-| 2025 | [ΔSurprise_vs_futures_2025.png](assets/charts/ΔSurprise_vs_futures_2025.png) |
-
-## Baseline Comparisons
-
-The signal is not simply long crop-season corn exposure.
-
 | Benchmark | Trades | Mean | Hit rate | t-stat | Profit factor |
 |---|---:|---:|---:|---:|---:|
 | ΔSurprise strategy | 23 | 1.42% | 82.6% | 2.78 | 5.03 |
@@ -158,119 +47,8 @@ The signal is not simply long crop-season corn exposure.
 
 Source table: [benchmark_summary.csv](assets/tables/benchmark_summary.csv)
 
-## September Deep Dive
+This investigation showed the viability of Crop Condition Reports in Corn futures trading intelligence. There are further applications to other crops and expanded datasets to continue testing. This strategy will begin to be tracked live as of August 1st, 2026. 
 
-A separate deep dive tests whether the effect is simply generic September strength. It compares signal weeks against all September crop-report weeks, non-signal September weeks, rolling September 5-day entries, September buy-and-hold, and randomized September week selections.
-
-Deep dive: [september_effect_deep_dive.md](september_deep_dive/september_effect_deep_dive.md)
-
-## Threshold Sensitivity
-
-September-only threshold behavior shows excellent results. We would expect to see a direct correlation between the strength of the signal and the magnitude of returns.
-That is what we observe:
-As ΔSurprise decreases, mean return increases and t-stat increases, but trade count decreases.
-As ΔSurprise increases, trade count rises, but so does the number of losses.
-
-Selected 5-day rows:
-
-| ΔSurprise threshold | Trades | Years | Mean 5d return | Hit rate | t-stat |
-|---|---:|---:|---:|---:|---:|
-| -0.30 | 4 | 3 | 3.20% | 100.0% | 5.08 |
-| -0.25 | 6 | 5 | 3.28% | 100.0% | 4.01 |
-| -0.20 | 9 | 5 | 2.40% | 88.9% | 3.31 |
-| -0.15 | 15 | 10 | 1.37% | 86.7% | 2.06 |
-| -0.10 | 23 | 13 | 1.42% | 82.6% | 2.78 |
-| -0.05 | 26 | 13 | 1.50% | 80.8% | 3.19 |
-
-Source table: [sep_only_threshold_horizon_sweep.csv](assets/tables/sep_only_threshold_horizon_sweep.csv)
-
-## By-Year Breakdown
-
-| Year | Trades | Mean 5d return | Hit rate | Signal dates |
-|---|---:|---:|---:|---|
-| 2013 | 2 | -2.16% | 50.0% | 2013-09-01, 2013-09-08 |
-| 2014 | 1 | 0.14% | 100.0% | 2014-09-07 |
-| 2015 | 2 | 4.04% | 100.0% | 2015-09-06, 2015-09-20 |
-| 2016 | 2 | 3.97% | 100.0% | 2016-09-04, 2016-09-25 |
-| 2017 | 1 | 0.07% | 100.0% | 2017-09-17 |
-| 2018 | 1 | 0.76% | 100.0% | 2018-09-02 |
-| 2019 | 3 | 2.39% | 100.0% | 2019-09-08, 2019-09-22, 2019-09-29 |
-| 2020 | 2 | 4.09% | 100.0% | 2020-09-06, 2020-09-27 |
-| 2021 | 1 | -1.15% | 0.0% | 2021-09-05 |
-| 2022 | 2 | 0.08% | 50.0% | 2022-09-18, 2022-09-25 |
-| 2023 | 2 | 1.40% | 100.0% | 2023-09-03, 2023-09-17 |
-| 2024 | 1 | 1.12% | 100.0% | 2024-09-01 |
-| 2025 | 3 | 0.54% | 66.7% | 2025-09-07, 2025-09-21, 2025-09-28 |
-
-This demonstrates that returns are not grouped strongly in a single year, but occur regularly over the entire trading period in a "relatively" even dispersion.
-
-Source table: [sep_ΔSurprise_strategy_by_year.csv](assets/tables/sep_ΔSurprise_strategy_by_year.csv)
-
-## Execution Cost Stress
-
-The strategy was stress-tested with round-trip cost modelling. The edge survived.
-
-| Cost assumption | Mean return | Hit rate | t-stat | Profit factor |
-|---|---:|---:|---:|---:|
-| No cost | 1.42% | 82.6% | 2.78 | 5.03 |
-| 5 bps round-trip | 1.37% | 82.6% | 2.69 | 4.79 |
-| 10 bps round-trip | 1.32% | 78.3% | 2.59 | 4.55 |
-| 20 bps round-trip | 1.22% | 69.6% | 2.39 | 4.06 |
-| 50 bps round-trip | 0.92% | 69.6% | 1.80 | 2.87 |
-| 100 bps round-trip | 0.42% | 52.2% | 0.82 | 1.60 |
-
-Source table: [execution_cost_stress.csv](assets/tables/execution_cost_stress.csv)
-
-## Audit Notes
-
-Checks performed:
-
-| Check | Result |
-|---|---|
-| Entry after report release | Passed |
-| Tuesday 08:00 CT entry proxy | 23/23 September trades |
-| Duplicate entries | None |
-| Overlapping 5d positions | None |
-| Seasonal expectation uses future years | No |
-| Adjusted futures chain removes artificial roll jumps | Yes |
-| Signal beats September rolling 5d baseline | Yes |
-
-Top-winner stress:
-
-| Test | Mean | Hit rate | t-stat | Profit factor |
-|---|---:|---:|---:|---:|
-| Full strategy | 1.42% | 82.6% | 2.78 | 5.03 |
-| Drop top 1 winner | 1.20% | 81.8% | 2.49 | 4.26 |
-| Drop top 2 winners | 1.01% | 81.0% | 2.18 | 3.63 |
-| Drop top 3 winners | 0.82% | 80.0% | 1.84 | 3.03 |
-| Drop top 5 winners | 0.52% | 77.8% | 1.19 | 2.16 |
-
-The result weakens when large winners are removed, but it does not disappear immediately. This is also observed as a result of the small sample size. 
-
-## Limitations
-
-Main limitations:
-
-| Limitation | Why it matters |
-|---|---|
-| Small sample | 23 trades is not enough for production confidence |
-| Calendar specificity | The edge is strongest in September |
-| Researcher degrees of freedom | Threshold and horizon were explored |
-| No live validation | Historical result only |
-| One-market test | Needs cross-crop or spread validation |
-
-## Next Tests
-
-The most useful extensions:
-
-1. Paper trade the rule live during upcoming Crop Progress seasons.
-2. Test adjacent crops such as soybeans and wheat.
-3. Test calendar spreads instead of outright ZC.
-4. Add weather, drought monitor, and regional precipitation features.
-5. Run a formal walk-forward design with thresholds selected only on prior data.
-
-## Bottom Line
-
-This research found a historically strong September reaction pattern in corn futures after sudden crop-condition deterioration. The result survives implementation checks and simple cost stress, and it meaningfully outperforms same-market seasonal baselines.
-
-I would treat it as a promising commodity research signal, not a finished trading system.
+Author: K. Thompson
+Research Platform: ThomPlatz Research
+Contact: thomplatzresearch@gmail.com
