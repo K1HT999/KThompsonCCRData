@@ -80,4 +80,4 @@ At the selected `ΔSurprise <= -0.10` threshold, September is the standout month
 ## Interpretation
 The September effect is not simply generic September long exposure: September buy-and-hold is weak, and random September weekly selections rarely match the observed signal mean, hit rate, or profit factor. The pattern is strongest when crop-condition surprise deteriorates abruptly, which fits the economic story of late-season yield-risk repricing.
 
-The main caveat is still selection bias: September became the focus after exploration. This should be treated as a promising research effect that needs live paper trading, cross-crop tests, and a formal walk-forward design before it is treated as production alpha.
+The main caveat is still selection bias: September became the focus after it was "discovered". This should be treated as a promising research effect that needs live paper trading, cross-crop tests, and a formal walk-forward design before it is treated as production alpha.
